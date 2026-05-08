@@ -6,7 +6,6 @@ import envConfig from 'src/shared/config'
 export class PostsService {
   constructor(private readonly prismaService : PrismaService){}
   getAllPost() {
-    console.log(envConfig.DATABASE_URL);
     return this.prismaService.post.findMany();
   }
   getPostById(id: string) {
