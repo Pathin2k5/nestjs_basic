@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { UnprocessableEntityException, ValidationPipe } from '@nestjs/common';
-import { ValidationError } from 'class-validator';
-import { error } from 'console';
+import { LoggingInterceptor } from './shared/Interceptors/logging.interceptor';
+import { TransformInterceptor } from './shared/Interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+
   //kích hoạt dto và set các ràng buộc
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true, //loại bỏ các trường thừa
@@ -29,6 +31,10 @@ async function bootstrap() {
       );
     }
   }))
+
+  //kích hoạt cái interceptors để xử lí (đây là sử dụng cho global toàn dự án)
+  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

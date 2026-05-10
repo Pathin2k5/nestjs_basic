@@ -1,6 +1,11 @@
 import { Body, ClassSerializerInterceptor, Controller, Post, SerializeOptions, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto, RegisterResDTO } from './auth.dto';
+import { LoggingInterceptor } from 'src/shared/Interceptors/logging.interceptor';
+
+
+//sử dụng interceptor logg trong phạm vi của controller này
+// @UseInterceptors(new LoggingInterceptor())
 
 @Controller('auth')
 export class AuthController {
@@ -14,9 +19,10 @@ export class AuthController {
      */
     @UseInterceptors(ClassSerializerInterceptor)
     @SerializeOptions({ type: RegisterResDTO })
-    
+
     @Post('register')
     register(@Body() body:RegisterDto){
+        // console.log("Controller......");
         return this.authService.register(body);
     }
 }
