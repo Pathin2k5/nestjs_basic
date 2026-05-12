@@ -17,15 +17,15 @@ if(!fs.existsSync(path.resolve('.env'))){
 //tạo ra 1 class để định nghĩa 1 khuôn mẫu cho các biến ở env
 class ConfigSchema{
     @IsString()
-    DATABASE_URL!: string;
+    DATABASE_URL: string;
     @IsString()
-    ACCESS_TOKEN_SECRET!: string;
+    ACCESS_TOKEN_SECRET: string;
     @IsString()
-    ACCESS_TOKEN_EXPIRES_IN!: string;
+    ACCESS_TOKEN_EXPIRES_IN: string;
     @IsString()
-    REFRESH_TOKEN_SECRET!: string;
+    REFRESH_TOKEN_SECRET: string;
     @IsString()
-    REFRESH_TOKEN_EXPIRES_IN!: string;
+    REFRESH_TOKEN_EXPIRES_IN: string;
 }
 
 //Biến môi trường (process.env) bản chất chỉ là một Object đơn thuần (Plain Object).

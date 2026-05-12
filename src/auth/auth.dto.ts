@@ -16,6 +16,15 @@ export class RegisterDto extends LoginDto {
     confirmPassword: string;
 }
 
+export class LoginResDto {
+    @IsString()
+    accesstoken : string;
+    @IsString()
+    refreshToken : string;
+    constructor(partial: Partial<LoginResDto>) {
+        Object.assign(this, partial);
+    }
+}
 export class RegisterResDTO {
     id: number;
     email: string;
