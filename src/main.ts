@@ -33,7 +33,7 @@ async function bootstrap() {
   }))
 
   //kích hoạt cái interceptors để xử lí (đây là sử dụng cho global toàn dự án)
-  app.useGlobalInterceptors(new LoggingInterceptor());
+  // app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }

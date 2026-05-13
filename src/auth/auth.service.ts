@@ -4,6 +4,7 @@ import { HasingService } from 'src/shared/hasing.service';
 import { PrismaService } from 'src/shared/prisma.service';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { TokenService } from 'src/shared/token.service';
+import { Unzip } from 'zlib';
 
 @Injectable()
 export class AuthService {
@@ -67,5 +68,32 @@ export class AuthService {
             }
         })
         return {accesstoken,refreshToken}
+    }
+
+    async refreshToken(refreshToken:string){
+        try {
+            //1. kiểm tra cái refreshToken client gửi lên xem có hợp lệ hay ko
+           const  {userId} = await this.tokenService.verifyRefreshToken(refreshToken);
+           //2. check xem cai refreshToken có tồn tại trong database ko
+           await this.prismaService.refreshToken.findUniqueOrThrow({
+            where : {
+                token : refreshToken
+            }
+           })
+           //3. xóa refreshToken cũ đi
+           await this.prismaService.refreshToken.delete({
+            where :{
+                token : refreshToken
+            }
+           })
+           return await this.generateTokens({userId});//trả về access token và refresh token
+        } catch (error) {
+            //trường hợp refresh token rồi ,hãy thông báo cho user biết
+            // refresh token của họ đã bị đánh cắp
+            if(error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025'){
+                throw new UnauthorizedException('Refresh token has been revoked')
+            }
+            throw new UnauthorizedException('Refresh token is invalid');
+        }
     }
 }

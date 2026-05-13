@@ -1,6 +1,6 @@
 import { Body, ClassSerializerInterceptor, Controller, Post, SerializeOptions, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, LoginResDto, RegisterDto, RegisterResDTO } from './auth.dto';
+import { LoginDto, LoginResDto, RefreshTokenBodyDto, RegisterDto, RegisterResDTO } from './auth.dto';
 import { LoggingInterceptor } from 'src/shared/Interceptors/logging.interceptor';
 
 
@@ -30,5 +30,11 @@ export class AuthController {
     @Post('login')
     async login(@Body() body:LoginDto){
         return await this.authService.login(body);
+    }
+
+    @SerializeOptions({type:RegisterResDTO})
+    @Post('refresh')
+    async refreshToken(@Body() body:RefreshTokenBodyDto){
+        return await this.authService.refreshToken(body.refreshToken);
     }
 }
