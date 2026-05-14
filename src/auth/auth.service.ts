@@ -5,6 +5,7 @@ import { PrismaService } from 'src/shared/prisma.service';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { TokenService } from 'src/shared/token.service';
 import { Unzip } from 'zlib';
+import { isNotFoundError, isUniqueContraintError } from 'src/shared/helpers';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
             })
             return user;
         } catch (error) {
-            if(error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002"){
+            if(isUniqueContraintError(error)){
                 throw new ConflictException("Email already exists")
             }
             throw error;
@@ -90,7 +91,7 @@ export class AuthService {
         } catch (error) {
             //trường hợp refresh token rồi ,hãy thông báo cho user biết
             // refresh token của họ đã bị đánh cắp
-            if(error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025'){
+            if(isNotFoundError(error)){
                 throw new UnauthorizedException('Refresh token has been revoked')
             }
             throw new UnauthorizedException('Refresh token is invalid');

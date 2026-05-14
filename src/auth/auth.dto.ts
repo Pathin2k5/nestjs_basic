@@ -1,10 +1,12 @@
 import { Exclude } from "class-transformer";
-import { IsString } from "class-validator";
+import { IsString, Length } from "class-validator";
+import { Match } from "src/shared/decorator/custom-validator";
 
 export class LoginDto {
     @IsString()
     email: string;
     @IsString()
+    @Length(6,20,{message : "Mật khẩu phải từ 6 đến 20 kí tự"})
     password: string;
 
 }
@@ -13,6 +15,7 @@ export class RegisterDto extends LoginDto {
     @IsString()
     name: string;
     @IsString()
+    @Match('password',{message: "mật khẩu ko khớp"})
     confirmPassword: string;
 }
 
