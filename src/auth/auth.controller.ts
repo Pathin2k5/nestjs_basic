@@ -4,6 +4,7 @@ import { LoginDto, LoginResDto, RefreshTokenBodyDto, RegisterDto, RegisterResDTO
 import { LoggingInterceptor } from 'src/shared/Interceptors/logging.interceptor';
 import { GuardsConsumer } from '@nestjs/core/guards';
 import { AccessTokenGuard } from 'src/shared/guards/access-token.guards';
+import { ApiKeyGuard } from 'src/shared/guards/api-key-guards';
 
 
 //sử dụng interceptor logg trong phạm vi của controller này
@@ -34,7 +35,8 @@ export class AuthController {
         return await this.authService.login(body);
     }
 
-    @UseGuards(AccessTokenGuard)//quards để kiểm soát controller này
+    @UseGuards(ApiKeyGuard,AccessTokenGuard)//quards để kiểm soát controller này
+    //Chạy ApiKeyGuard trước, sau đó mới đến AccessTokenGuard
     @SerializeOptions({type:RegisterResDTO})
     @Post('refresh')
     async refreshToken(@Body() body:RefreshTokenBodyDto){
