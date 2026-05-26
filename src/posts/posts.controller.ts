@@ -6,13 +6,19 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
+import { Auth } from 'src/shared/decorator/auth.decorator';
+import { AuthType, ConditionGuard } from 'src/shared/constants/auth.constant';
+import { AuthenticationGuard } from 'src/shared/guards/authentication.guards';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postSerive: PostsService) {}
   //Phương thức get lấy ra tất cả các post
+  @Auth([AuthType.Bearer,AuthType.ApiKey],{condition : ConditionGuard.Or})
+  @UseGuards(AuthenticationGuard)
   @Get()
   getPosts() {
     return this.postSerive.getAllPost();
